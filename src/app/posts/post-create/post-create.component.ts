@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Post } from '../post.model';
 import { PostsService } from '../posts.service';
 
@@ -8,14 +9,31 @@ import { PostsService } from '../posts.service';
   templateUrl: './post-create.component.html',
   styleUrls: ['./post-create.component.css'],
 })
-export class PostCreateComponent {
-  initForm: boolean = true;
+export class PostCreateComponent implements OnInit {
+  private mode = 'create';
+  private postId!: string | null;
+  private post!: Post;
 
-  constructor(private postsSevice: PostsService) {}
+  constructor(
+    private postsSevice: PostsService,
+    private route: ActivatedRoute
+  ) {}
+
+  ngOnInit() {
+    this.route.paramMap.subscribe((paramMap: ParamMap) => {
+      if (paramMap.has('postId')) {
+        this.mode = 'edit';
+        this.postId = paramMap.get('postId');
+        this.post = this.postsSevice.getPost(this.postId || '');
+      } else {
+        this.mode = 'create';
+        this.postId = null;
+      }
+    });
+  }
 
   onAddPost(form: NgForm) {
     if (form.invalid) {
-      this.initForm = false;
       return;
     }
     const post: Post = {
@@ -25,7 +43,6 @@ export class PostCreateComponent {
     };
 
     this.postsSevice.addPost(post);
-    this.initForm = true;
     form.resetForm();
   }
 }
