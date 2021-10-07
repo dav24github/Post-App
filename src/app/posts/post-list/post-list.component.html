@@ -1,4 +1,5 @@
-<mat-accordion multi="true" *ngIf="posts">
+<mat-spinner *ngIf="isLoading"></mat-spinner>
+<mat-accordion multi="true" *ngIf="posts && !isLoading">
   <mat-expansion-panel *ngFor="let post of posts">
     <mat-expansion-panel-header>
       <mat-panel-title> {{ post.title }} </mat-panel-title>
@@ -6,11 +7,16 @@
     </mat-expansion-panel-header>
     <p>{{ post.content }}</p>
     <mat-action-row>
-      <button mat-button color="primary">EDIT</button>
-      <button mat-button color="warn" (click)="onDelete(post.id)">DELTE</button>
+      <a mat-button color="primary" [routerLink]="['/edit', post.id]">EDIT</a>
+      <button mat-button color="warn" (click)="onDelete(post.id!)">
+        DELETE
+      </button>
     </mat-action-row>
   </mat-expansion-panel>
 </mat-accordion>
-<p class="info-text mat-body-1" *ngIf="posts! && posts.length <= 0">
+<p
+  class="info-text mat-body-1"
+  *ngIf="posts! && posts.length <= 0 && !isLoading"
+>
   No posts added yet!
 </p>

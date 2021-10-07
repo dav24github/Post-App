@@ -12,3 +12,20 @@ textarea {
 .example-full-width {
   width: 100%;
 }
+
+mat-spinner {
+  margin: auto;
+}
+
+input[type="file"] {
+  visibility: hidden;
+}
+
+.image-preview {
+  height: 5rem;
+  margin: 1rem;
+}
+
+.image-preview img {
+  height: 100%;
+}
