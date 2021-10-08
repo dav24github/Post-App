@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Post } from '../post.model';
 import { PostsService } from '../posts.service';
@@ -56,17 +56,20 @@ export class PostCreateComponent implements OnInit {
   }
 
   onImagePicked(event: Event) {
+    //for submitting
     const file = (event.target as HTMLInputElement).files![0];
-    this.form.patchValue({ image: file }); //single control
+    this.form.patchValue({ image: file });
     this.form.get('image')?.updateValueAndValidity();
 
+    //for visualization
     const reader = new FileReader();
-    reader.onload = () => {
-      this.imagePreview = reader.result as string;
 
-      console.log(this.imagePreview);
+    reader.onload = () => {
+      //reading opration is done
+      this.imagePreview = reader.result as string;
     };
-    reader.readAsDataURL(file);
+
+    reader.readAsDataURL(file); // [src] URL
   }
 
   onSavePost() {
