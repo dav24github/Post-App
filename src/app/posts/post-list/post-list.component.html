@@ -5,8 +5,11 @@
       <mat-panel-title> {{ post.title }} </mat-panel-title>
       <mat-panel-description> </mat-panel-description>
     </mat-expansion-panel-header>
+    <div class="post-image">
+      <img [src]="post.imagePath" [alt]="post.title" />
+    </div>
     <p>{{ post.content }}</p>
-    <mat-action-row>
+    <mat-action-row *ngIf="userIsAuthenticated && userId === post.creator">
       <a mat-button color="primary" [routerLink]="['/edit', post.id]">EDIT</a>
       <button mat-button color="warn" (click)="onDelete(post.id!)">
         DELETE
@@ -14,6 +17,13 @@
     </mat-action-row>
   </mat-expansion-panel>
 </mat-accordion>
+<mat-paginator
+  [length]="totalPosts"
+  [pageSize]="postsPerPage"
+  [pageSizeOptions]="pageSizeOptions"
+  (page)="onChangePage($event)"
+  *ngIf="posts && posts.length > 0"
+></mat-paginator>
 <p
   class="info-text mat-body-1"
   *ngIf="posts! && posts.length <= 0 && !isLoading"
