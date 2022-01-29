@@ -2,6 +2,9 @@
   "name": "post-app",
   "version": "0.0.0",
   "private": true,
+  "scripts": {
+    "start": "nodemon server.js"
+  },
   "dependencies": {
     "bcrypt": "^5.0.1",
     "body-parse": "^0.1.0",
