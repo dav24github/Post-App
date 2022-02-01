@@ -63,11 +63,14 @@ export class PostsService {
     }>(BANCKEND_URL + id);
   }
 
-  addPost(title: string, content: string, image: File): void {
+  addPost(title: string, content: string, image: File, imageData: any): void {
     const postData = new FormData();
     postData.append('title', title);
     postData.append('content', content);
     postData.append('image', image, title);
+    postData.append('imageData', imageData);
+
+    console.log(imageData);
     this.http
       .post<{ message: string; post: Post }>(BANCKEND_URL, postData)
       .subscribe(() => {
@@ -75,7 +78,13 @@ export class PostsService {
       });
   }
 
-  updatePost(id: string, title: string, content: string, image: File | string) {
+  updatePost(
+    id: string,
+    title: string,
+    content: string,
+    image: File | string,
+    imageData: any
+  ) {
     let postData: Post | FormData;
     if (typeof image === 'object') {
       postData = new FormData();
@@ -83,6 +92,7 @@ export class PostsService {
       postData.append('id', id);
       postData.append('content', content);
       postData.append('image', image, title);
+      postData.append('imageData', imageData);
     } else {
       postData = {
         id: id,

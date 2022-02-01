@@ -20,6 +20,7 @@ export class PostCreateComponent implements OnInit, OnDestroy {
   private mode = 'create';
   private postId!: string | null;
   private authStatusSub!: Subscription;
+  imageData: any;
 
   constructor(
     private postsSevice: PostsService,
@@ -82,6 +83,7 @@ export class PostCreateComponent implements OnInit, OnDestroy {
 
     reader.onload = () => {
       //reading opration is done
+      this.imageData = reader.result;
       this.imagePreview = reader.result as string;
     };
 
@@ -97,14 +99,16 @@ export class PostCreateComponent implements OnInit, OnDestroy {
       this.postsSevice.addPost(
         this.form.value.title,
         this.form.value.content,
-        this.form.value.image
+        this.form.value.image,
+        this.imageData
       );
     } else {
       this.postsSevice.updatePost(
         this.postId!,
         this.form.value.title,
         this.form.value.content,
-        this.form.value.image
+        this.form.value.image,
+        this.imageData
       );
     }
     this.form.reset();
