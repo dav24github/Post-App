@@ -39,37 +39,59 @@ exports.createPosts = (req, res, next) => {
 };
 
 exports.updatePost = (req, res, next) => {
-  console.log("req.body => ", req.body);
   const fileStr = req.body.imageData;
-  cloudinary.uploader
-    .upload(fileStr, {
-      upload_preset: "dev_setups",
-    })
-    .then((uploadResponse) => {
-      console.log("uploadResponse => ", uploadResponse);
-      const post = new Post({
-        _id: req.body.id,
-        title: req.body.title,
-        content: req.body.content,
-        imagePath: uploadResponse.public_id,
-        creator: req.userData.userId,
-      });
-      Post.updateOne({ _id: req.params.id, creator: req.userData.userId }, post)
-        .then((result) => {
-          if (result.matchedCount > 0)
-            res.status(200).json({ message: "Updated successfully!" });
-          else res.status(401).json({ message: "Not Authorized" });
-        })
-        .catch((error) => {
-          res.status(500).json({
-            message: "Couldn't update post",
-          });
+  if (typeof fileStr !== "undefined" && fileStr) {
+    cloudinary.uploader
+      .upload(fileStr, {
+        upload_preset: "dev_setups",
+      })
+      .then((uploadResponse) => {
+        console.log("uploadResponse => ", uploadResponse);
+        const post = new Post({
+          _id: req.body.id,
+          title: req.body.title,
+          content: req.body.content,
+          imagePath: uploadResponse.public_id,
+          creator: req.userData.userId,
         });
-    })
-    .catch((err) => {
-      console.error("cloudinary.uploader.upload error => ", err);
-      res.status(500).json({ err: "Something went wrong" });
+        Post.updateOne(
+          { _id: req.params.id, creator: req.userData.userId },
+          post
+        )
+          .then((result) => {
+            if (result.matchedCount > 0)
+              res.status(200).json({ message: "Updated successfully!" });
+            else res.status(401).json({ message: "Not Authorized" });
+          })
+          .catch((error) => {
+            res.status(500).json({
+              message: "Couldn't update post",
+            });
+          });
+      })
+      .catch((err) => {
+        console.error("cloudinary.uploader.upload error => ", err);
+        res.status(500).json({ err: "Something went wrong" });
+      });
+  } else {
+    const post = new Post({
+      _id: req.body.id,
+      title: req.body.title,
+      content: req.body.content,
+      creator: req.userData.userId,
     });
+    Post.updateOne({ _id: req.params.id, creator: req.userData.userId }, post)
+      .then((result) => {
+        if (result.matchedCount > 0)
+          res.status(200).json({ message: "Updated successfully!" });
+        else res.status(401).json({ message: "Not Authorized" });
+      })
+      .catch((error) => {
+        res.status(500).json({
+          message: "Couldn't update post",
+        });
+      });
+  }
 };
 
 exports.getPosts = (req, res, next) => {
