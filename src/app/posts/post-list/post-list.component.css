@@ -18,7 +18,7 @@ mat-spinner {
 .post-image img {
   display: block;
   margin: auto;
-  width: 50%;
+  width: 100%;
   box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
   margin-bottom: 1rem;
 }
